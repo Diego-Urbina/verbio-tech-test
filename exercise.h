@@ -1,17 +1,34 @@
 #pragma once
 #include <string>
 #include "numberParser.h"
+#include "iparser.h"
 
-class Parser
+namespace VerbioTechTest
 {
-public:
-    std::string getSentence(const std::string &sentence);
+	class Exercise
+	{
+	public:
+		Exercise(IParser *parser);
 
-private:
-    bool isNumber(const std::string &word);
+		~Exercise();
 
-    bool validState();
+		/**
+		 * @brief Given a string, parse it with the parser passed in the ctor
+		 *
+		 * @param sentence
+		 * @return std::string
+		 */
+		std::string getSentence(std::string sentence);
 
-    // TODO extender a std::vector<IParser> mParsers;
-    NumberParser mNumberParser;
-};
+	private:
+		void flushFromParser(std::ostringstream &out);
+
+		bool validState() const;
+
+		void reset();
+
+		IParser *mParser;
+
+		bool mValidState;
+	};
+}

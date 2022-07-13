@@ -1,37 +1,79 @@
 #pragma once
-#include "string"
+#include <string>
+#include "iparser.h"
 #include "tokenNumber.h"
 
-class NumberParser
+namespace VerbioTechTest
 {
-public:
-    /**
-     * @brief Add the given word to the current value
-     *
-     * @param word std::string that represents the new added word
-     * @return false if the result is not valid, true otherwise
-     */
-    bool addWord(const std::string &word);
+	/**
+	 * @brief The algorithm is simple. There are two types of 'numbers':
+	 * real numbers (one or twenty) and magnitudes (hundred or million).
+	 * In english, only can appear one magnitude greater or equals than thousand
+	 * (if there is the word million, there can't be the word billion).
+	 *
+	 * I accumulate in mCurrent numbers less than thousand. When I found a
+	 * magnitude greater or equals than thousand, I multiply and move the
+	 * result to mTotal, reseting mCurrent.
+	 *
+	 * I do this process again and again, but I am careful with the multiply
+	 * operation. There are some constraints.
+	 *
+	 */
+	class NumberParser : public IParser
+	{
+	public:
+		NumberParser();
 
-    /**
-     * @brief Get the value
-     *
-     * @return std::string with the parsed value
-     */
-    std::string getValue();
+		/**
+		 * @brief Add the given word to the current value
+		 *
+		 * @param word std::string that represents the new added word
+		 * @return false if the result is not valid, true otherwise
+		 */
+		bool addWord(const std::string &word) override;
 
-    // Return true if a parsing is active
-    bool isActive();
+		/**
+		 * @brief Get the value of the parsed number
+		 *
+		 * @return std::string with the parsed value
+		 */
+		int getValue() override;
 
-private:
-    // Starts a new parsing
-    void reset();
+		/**
+		 * @brief Check if a word can be managed by this parser
+		 *
+		 * @param word std::string that represents a word
+		 * @return true if the given word can be managed by this parser, false otherwise
+		 */
+		bool isValidWord(const std::string &word) const override;
 
-    bool add(const TokenNumber &other);
+		/**
+		 * @brief Starts a new parsing
+		 *
+		 */
+		void reset() override;
 
-    bool multiply(const TokenNumber &other);
+	private:
+		/**
+		 * @brief Add the given TokenNumber
+		 *
+		 * @param other TokenNumber to add
+		 * @return true if everything goes well, false otherwise
+		 */
+		bool add(const TokenNumber &other);
 
-    TokenNumber mTotal;
-    TokenNumber mCurrent;
-    bool mIsActive;
-};
+		/**
+		 * @brief Multiply the given TokenNumber
+		 *
+		 * @param other TokenNumber to multiply
+		 * @return true if everything goes well, false otherwise
+		 */
+		bool multiply(const TokenNumber &other);
+
+		// TokenNumber which accumulates large values, above one thousand
+		TokenNumber mTotal;
+
+		// TokenNumber which accumulates small values, bellow one thousand
+		TokenNumber mCurrent;
+	};
+}

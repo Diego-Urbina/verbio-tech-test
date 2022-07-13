@@ -1,20 +1,37 @@
 #pragma once
-#include <string>
 
-struct TokenNumber
+namespace VerbioTechTest
 {
-    TokenNumber() : mValue{0}, mMagnitude{0} {}
+	struct TokenNumber
+	{
+		TokenNumber();
 
-    TokenNumber(int value);
+		TokenNumber(int value);
 
-    TokenNumber &operator+(const TokenNumber &other);
+		TokenNumber &operator+(const TokenNumber &other);
+		TokenNumber &operator*(const TokenNumber &other);
 
-    TokenNumber &operator*(const TokenNumber &other);
+		bool operator<(const TokenNumber& rhs) const;
+		bool operator>(const TokenNumber& rhs) const;
+		bool operator<=(const TokenNumber& rhs) const;
+		bool operator>=(const TokenNumber& rhs) const;
 
-    // void multiply(int mul);
+		bool isEmpty() const;
 
-    void reset();
+		void reset();
 
-    int mValue;
-    int mMagnitude; // 0, 1, 10, 100, 1000, 1000000, 1000000000
-};
+		/**
+		 * Token numeric value
+		 */
+		int mValue;
+
+		/**
+		 * number of digits of mValue
+		 */
+		int mMagnitude;
+
+	private:
+
+		void calcMagnitude();
+	};
+}

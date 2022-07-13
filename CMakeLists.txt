@@ -4,7 +4,7 @@ project(VerbioTechnicalTest VERSION 1.0.0)
 include(CTest)
 enable_testing()
 
-add_executable(VerbioTechnicalTest main.cpp parser.cpp numberParser.cpp tokenNumber.cpp)
+add_executable(VerbioTechnicalTest main.cpp exercise.cpp numberParser.cpp tokenNumber.cpp)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

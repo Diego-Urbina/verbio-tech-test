@@ -1,50 +1,79 @@
+#include "exercise.h"
 #include <sstream>
-#include "parser.h"
 #include "numbersUtilities.h"
+#include "stringUtilities.h"
 
-std::string Parser::getSentence(const std::string &sentence)
+namespace VerbioTechTest
 {
-    std::ostringstream out;
+	Exercise::Exercise(IParser *parser) : mParser{parser}, mValidState{true} {}
 
-    std::istringstream in(sentence);
-    std::string word;
-    while (in >> word && validState())
-    {
-        if (isNumber(word))
-        {
-            mNumberParser.addWord(word);
-        }
-        else
-        {
-            if (mNumberParser.isActive())
-            {
-                out << mNumberParser.getValue() << ' ';
-            }
-            out << word << ' ';
-        }
-    }
+	Exercise::~Exercise()
+	{
+		delete mParser;
+		mParser = nullptr;
+	}
 
-    if (validState())
-    {
-        if (mNumberParser.isActive())
-        {
-            out << mNumberParser.getValue() << ' ';
-        }
-    }
-    else
-    {
-        // Error management
-    }
+	std::string Exercise::getSentence(std::string sentence)
+	{
+		reset();
 
-    return out.str();
-}
+		std::ostringstream out;
+		std::istringstream in(sentence);
+		std::string word;
 
-bool Parser::isNumber(const std::string &word)
-{
-    return NumberUtilities::isNumber(word) || NumberUtilities::isMagnitude(word);
-}
+		/* I know there is a problem with this tokenizer method.
+		 * I use whitespace for spliting the string, and that's the reason
+		 * because it doesn't split properly a word follows by other char.
+		 * It doesn't detect "Five?" for example. I tried to use regex
+		 * but I don't have enougth time and I consider that this is not
+		 * the main porpouse of the test
+		 */
+		while (in >> word && validState())
+		{
+			// If a word can be managed by the parser...
+			auto lowerWord = StringUtilities::toLower(word);
+			if (mParser->isValidWord(lowerWord))
+			{
+				mValidState = mParser->addWord(lowerWord);
+			}
+			else
+			{
+				flushFromParser(out);
+				out << word << ' ';
+			}
+		}
 
-bool Parser::validState()
-{
-    return true;
+		if (validState())
+		{
+			flushFromParser(out);
+		}
+		else
+		{
+			// Error management
+			out.str("");
+			out.clear();
+			out << "[ERROR] Invalid number format: " << sentence;
+		}
+
+		return out.str();
+	}
+
+	void Exercise::flushFromParser(std::ostringstream &out)
+	{
+		if (mParser->isActive())
+		{
+			out << mParser->getValue() << ' ';
+		}
+	}
+
+	bool Exercise::validState() const
+	{
+		return mValidState;
+	}
+
+	void Exercise::reset()
+	{
+		mValidState = true;
+		mParser->reset();
+	}
 }
