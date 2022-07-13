@@ -1,10 +1,10 @@
 # verbio-tech-test
 
 ## Build
-mkdir release \
-cd release \
-cmake -DCMAKE_BUILD_TYPE=Release .. \
-cmake --build . \
+mkdir release  
+cd release  
+cmake -DCMAKE_BUILD_TYPE=Release ..  
+cmake --build .  
 
 ## Usage
 ### Interactive mode
@@ -18,7 +18,7 @@ cmake --build . \
 
 ## Algorithm
 ### Definitions
-*Number*: units or tens \
+*Number*: units or tens  
 *Magnitude*: hundred, thousan, million or billion
 ```
 total = 0
@@ -71,4 +71,6 @@ while (not end)
 I use an IParser interface. So it's possible to achieve other translations just using a new Parser, for example, an EmojiParser!
 
 ## Potential fixes and improvements
-I know there is a problem with the tokenizer method. I use whitespaces for spliting the string, and that's the reason because it doesn't split properly a word follows by other character. It doesn't detect "Five?" for example. I tried to use regex but I don't have enought time and I consider that is not the main purpose of the test
+I know there is a problem with the tokenizer method. I use whitespaces for spliting the string, and that's the reason because it doesn't split properly a word follows by other character. It doesn't detect "Five?" for example. I tried to use regex but I don't have enought time and I consider that is not the main purpose of the test.
+
+Use of test cases. There are some test that I have launched during the development, but I am not covering all functionalities with unit tests. It's a very good practice to do that, but I have used a new environment for me (VSCode under linux) and I needed to do some research.
