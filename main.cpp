@@ -61,7 +61,6 @@ int test()
 
 int main(int argc, char **argv)
 {
-	test();
 	if (argc == 1)
 	{
 		return interactiveMode();
